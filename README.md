@@ -1,4 +1,69 @@
-## PyTorch Docker image
+# Pytorch geometric temporal docker image
+## 1) Image of the fork available to use on:
+
+[Docker hub image](https://hub.docker.com/repository/docker/jonathaneduardotitoontaneda/docker-pytorch-geometric-temporal)
+
+
+## 2) Steps to pubish your own docker image as the one in 1)
+
+### Dockerfile content for this fork:
+
+```
+FROM anibali/pytorch:1.11.0-cuda11.5-ubuntu20.04
+RUN pip install torch-scatter -f https://data.pyg.org/whl/torch-1.11.0+cu115.html
+RUN pip install torch-sparse -f https://data.pyg.org/whl/torch-1.11.0+cu115.html
+RUN pip install torch-geometric
+RUN pip install torch-cluster -f https://data.pyg.org/whl/torch-1.11.0+cu115.html
+RUN pip install torch-spline-conv -f https://data.pyg.org/whl/torch-1.11.0+cu115.html
+RUN pip install torch-geometric-temporal
+```
+#### Build docker image:
+
+```
+docker build . -t "DOCKER_HUB_USER/DOCKER_HUB_REPO_NAME"
+```
+
+#### Tag docker image builded:
+
+```
+docker image ls
+```
+
+Copy the IMAGE_ID and run:
+
+```
+docker tag IMAGE_ID DOCKER_HUB_USER/DOCKER_HUB_REPO_NAME:torch1.11.0-cuda11.5
+```
+#### Run docker image in a docker container:
+
+```
+docker run --rm -it --init --gpus=all --ipc=host --volume="$PWD:/app" DOCKER_HUB_USER/DOCKER_HUB_REPO_NAME:torch1.11.0-cuda11.5 bash
+```
+#### Publish on docker hub
+
+
+
+As `--rm` option delete the container when the terminal is closed, you must open other terminal and execute:
+
+Login to docker hub using `docker login`
+
+
+Copy the CONTAINER_ID obtained with:
+
+```
+docker ps
+```
+
+and run:
+
+```
+docker commit CONTAINER_ID DOCKER_HUB_USER/DOCKER_HUB_REPO_NAME:torch1.11.0-cuda11.5
+
+docker push DOCKER_HUB_USER/DOCKER_HUB_REPO_NAME:torch1.11.0-cuda11.5
+
+```
+
+## PyTorch Docker image (We use: anibali/pytorch:1.11.0-cuda11.5-ubuntu20.04)
 
 [![Docker Automated build](https://img.shields.io/docker/automated/anibali/pytorch)](https://hub.docker.com/r/anibali/pytorch/)
 [![Docker Automated build](https://img.shields.io/docker/image-size/anibali/pytorch/latest)](https://hub.docker.com/r/anibali/pytorch/)
